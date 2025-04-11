@@ -1,5 +1,4 @@
 const mariadb = require("mysql");
-const { rootCertificates } = require("tls");
 
 const conn = mariadb.createConnection({
   host: "localhost",
