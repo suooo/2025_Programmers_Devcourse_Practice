@@ -1,0 +1,32 @@
+body {
+  text-align: center;
+}
+
+a {
+  text-decoration-line: none;
+}
+
+.card_parent {
+  text-align: center;
+  margin: 50px;
+}
+
+.card {
+  display: inline-block;
+  width: 300px;
+}
+
+.card_img {
+  width: 180px;
+}
+
+.show_num {
+  width: 50px;
+}
+
+.orderlist_table {
+  margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 700px;
+}
