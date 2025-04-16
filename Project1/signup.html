@@ -7,12 +7,13 @@
   </head>
   <body>
     <h1>회원가입</h1>
-    <form>
-      <input type="text" placeholder="이름" /><br />
-      <input type="email" placeholder="이메일" /><button>인증</button><br />
-      <input type="password" placeholder="비밀번호" /><button>인증</button
-      ><br />
-      <input type="password" placeholder="비밀번호 재확인" />
+    <form action="/signup">
+      <input type="text" name="name" placeholder="이름" /><br />
+      <input type="email" name="email" placeholder="이메일" />
+      <button>인증</button><br />
+      <input type="text" name="password" placeholder="비밀번호" />
+      <button>인증</button><br />
+      <input type="text" name="confirm" placeholder="비밀번호 재확인" />
     </form>
     <input
       class="confirm_signup"

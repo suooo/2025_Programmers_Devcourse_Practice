@@ -69,8 +69,6 @@ function detail(response, query) {
 
 let order_id = 1100;
 let tmpUserid = 1;
-let tmpName = "임시 이름";
-let tmpEmail = "tmp-email@example.com";
 
 function order(response, query) {
   const show_id = parseInt(query.show_id);
@@ -154,6 +152,7 @@ function login(response) {
   response.end();
 }
 
+let user_id = 110;
 function signup(response) {
   response.writeHead(200, { "Content-Type": "text/html" });
 
