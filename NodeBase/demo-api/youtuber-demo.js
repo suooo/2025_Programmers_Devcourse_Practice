@@ -24,12 +24,17 @@ let youtuber3 = {
 };
 
 let db = new Map();
-db.set(1, youtuber1);
-db.set(2, youtuber2);
-db.set(3, youtuber3);
+var id = 1;
+db.set(id++, youtuber1);
+db.set(id++, youtuber2);
+db.set(id++, youtuber3);
 
 //REST API 설계
-app.get("/youtuber/:id", (req, res) => {
+app.get("/youtubers", (req, res) => {
+  res.json(Object.fromEntries(db));
+});
+
+app.get("/youtubers/:id", (req, res) => {
   let { id } = req.params;
   id = parseInt(id);
   const youtuber = db.get(id);
@@ -40,4 +45,15 @@ app.get("/youtuber/:id", (req, res) => {
   } else {
     res.json(youtuber);
   }
+});
+
+app.use(express.json());
+app.post("/youtuber", (req, res) => {
+  console.log(req.body);
+
+  //map에 PUT하기
+  db.set(id++, req.body);
+  res.json({
+    message: `${req.body.channelTitle} 님, 유튜브 시작을 축하드립니다!`,
+  });
 });
