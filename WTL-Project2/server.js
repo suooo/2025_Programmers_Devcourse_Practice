@@ -78,6 +78,17 @@ app.delete("/youtuber/:id", (req, res) => {
   const deleteId = parseInt(req.params.id);
   if (db.has(deleteId)) {
     db.delete(deleteId);
-    res.json({ message: "삭제 완료!" });
+    res.json({ message: "유튜버 정보를 삭제 완료헸습니다." });
   }
+});
+
+app.put("/youtuber/:id", (req, res) => {
+  let { id } = req.params;
+  id = parseInt(id);
+  const { subscribers } = req.body;
+  const youtuber = db.get(id);
+  youtuber.subscribers = subscribers; // 구독자 수 업데이트
+  db.set(id, youtuber); // 다시 저장
+
+  res.json({ message: "구독자 수가 업데이트되었습니다." });
 });

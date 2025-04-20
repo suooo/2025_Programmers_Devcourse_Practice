@@ -96,7 +96,10 @@ button:hover {
   border: 2px solid rgb(206, 44, 44);
 }
 
-/* style.css 아래에 추가 */
+#addButton {
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
 .popup.hidden {
   display: none;
 }

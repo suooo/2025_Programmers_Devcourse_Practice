@@ -24,11 +24,6 @@ fetch("/youtubers")
           subBtn.textContent = "구독";
           subBtn.classList.remove("subscribed");
           isSubscribed = false;
-          fetch(`/youtuber/${id}`, {
-            method: "PUT",
-          })
-            .then((res) => res.json())
-            .then((data) => {});
         } else {
           // 구독 안 함 -> 구독하기
           youtuber.subscribers++;
@@ -38,6 +33,14 @@ fetch("/youtubers")
         }
 
         subDiv.textContent = `구독자: ${youtuber.subscribers}명`;
+
+        fetch(`/youtuber/${id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ subscribers: youtuber.subscribers }),
+        });
       });
 
       const deleteBtn = newDiv.querySelector(".deleteButton");
