@@ -1,18 +1,19 @@
 // express 모듈 세팅
-import express, { response } from "express";
-const app = express();
-app.listen(7000);
-app.use(express.json()); //http 외 모듈 'json' 사용
+const express = require("express");
+const router = express.Router();
+router.use(express.json()); //http 외 모듈 'json' 사용
 
 let db = new Map();
 var id = 1;
 
-app
-  .route("/channels")
+router
+  .route("/")
   .post((req, res) => {
     // 개별 채널 생성
     if (req.body.channelTitle) {
-      db.set(id++, req.body);
+      let channel = req.body;
+      db.set(id++, channel);
+
       res.status(201).json({
         message: `${db.get(id - 1).channelTitle} 님, 유튜브 시작을 응원합니다!`,
       });
@@ -24,21 +25,28 @@ app
   })
   .get((req, res) => {
     // 채널 전체 조회
-    if (db.size) {
-      var channels = [];
+    var { userId } = req.body;
+    var channels = [];
+    if (db.size && userId) {
       db.forEach((value, key) => {
-        channels.push(value);
+        if (value.userId === userId) {
+          channels.push(value);
+        }
       });
-      res.status(200).json(channels);
+
+      if (channels.length) {
+        res.status(200).json(channels);
+      } else {
+        // 해당 userId가 생성한 채널이 없는 경우 예외 처리
+        notFoundChannel();
+      }
     } else {
-      res.status(404).json({
-        message: "조회할 채널이 없습니다.",
-      });
+      notFoundChannel();
     }
   });
 
-app
-  .route("/channels/:id")
+router
+  .route("/:id")
   .put((req, res) => {
     // 개별 채널 수정
     let { id } = req.params;
@@ -53,9 +61,7 @@ app
         message: `채널명이 ${oldTitle}에서 ${newTitle}(으)로 성공적으로 수정되었습니다.`,
       });
     } else {
-      res.status(404).json({
-        message: "요청하신 채널 정보를 찾을 수 없습니다.",
-      });
+      notFoundChannel();
     }
   })
   .delete((req, res) => {
@@ -70,9 +76,7 @@ app
         message: `${channel.channelTitle} 님의 채널이 삭제되었습니다.`,
       });
     } else {
-      res.status(404).json({
-        message: "요청하신 채널 정보를 찾을 수 없습니다.",
-      });
+      notFoundChannel();
     }
   })
   .get((req, res) => {
@@ -84,8 +88,14 @@ app
     if (channel) {
       res.status(200).json(channel);
     } else {
-      res.status(404).json({
-        message: "요청하신 채널 정보를 찾을 수 없습니다.",
-      });
+      notFoundChannel();
     }
   });
+
+function notFoundChannel() {
+  res.status(404).json({
+    message: "요청하신 채널 정보를 찾을 수 없습니다.",
+  });
+}
+
+module.exports = router;
