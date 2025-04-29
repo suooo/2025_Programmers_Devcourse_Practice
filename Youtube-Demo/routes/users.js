@@ -1,10 +1,16 @@
 // express 모듈 세팅
 const express = require("express");
+const conn = require("../mariadb");
 const router = express.Router();
 router.use(express.json()); //http 외 모듈 'json' 사용
 
 let db = new Map();
 var id = 1;
+
+conn.query("SELECT * FROM `users`", (err, results, fields) => {
+  var { id, email, name, created_at } = results[0];
+  console.log(created_at);
+});
 
 // 로그인
 router.post("/login", (req, res) => {
