@@ -13,7 +13,7 @@ const connection = mysql.createConnection({
 module.exports = connection;
 
 // A simple SELECT query
-// conn.query("SELECT * FROM `users`", (err, results, fields) => {
+// connection.query("SELECT * FROM `users`", (err, results, fields) => {
 //   var { id, email, name, created_at } = results[0];
 //   console.log(created_at);
 // });
