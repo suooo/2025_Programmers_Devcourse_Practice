@@ -1,5 +1,6 @@
 // express 모듈 세팅
 const express = require("express");
+const conn = require("../mariadb");
 const router = express.Router();
 router.use(express.json()); //http 외 모듈 'json' 사용
 
@@ -10,12 +11,13 @@ router
   .route("/")
   .post((req, res) => {
     // 개별 채널 생성
-    if (req.body.channelTitle) {
-      let channel = req.body;
-      db.set(id++, channel);
+    const { name, userId } = req.body;
+    if (name && userId) {
+      let sql = `INSERT INTO channels (name, user_id) VALUES (?, ?)`;
+      let values = [name, userId];
 
-      res.status(201).json({
-        message: `${db.get(id - 1).channelTitle} 님, 유튜브 시작을 응원합니다!`,
+      conn.query(sql, values, (err, results) => {
+        res.status(201).json(results);
       });
     } else {
       res.status(400).json({
@@ -26,22 +28,17 @@ router
   .get((req, res) => {
     // 채널 전체 조회
     var { userId } = req.body;
-    var channels = [];
-    if (db.size && userId) {
-      db.forEach((value, key) => {
-        if (value.userId === userId) {
-          channels.push(value);
+
+    let sql = `SELECT * FROM channels WHERE user_id = ?`;
+    if (userId) {
+      conn.query(sql, userId, (err, results) => {
+        if (results.length) res.status(200).json(results);
+        else {
+          notFoundChannel(res);
         }
       });
-
-      if (channels.length) {
-        res.status(200).json(channels);
-      } else {
-        // 해당 userId가 생성한 채널이 없는 경우 예외 처리
-        notFoundChannel();
-      }
     } else {
-      notFoundChannel();
+      res.status(400).end();
     }
   });
 
@@ -84,15 +81,16 @@ router
     let { id } = req.params;
     id = parseInt(id);
 
-    var channel = db.get(id);
-    if (channel) {
-      res.status(200).json(channel);
-    } else {
-      notFoundChannel();
-    }
+    let sql = `SELECT * FROM channels WHERE id = ?`;
+    conn.query(sql, id, (err, results) => {
+      if (results.length) res.status(200).json(results);
+      else {
+        notFoundChannel(res);
+      }
+    });
   });
 
-function notFoundChannel() {
+function notFoundChannel(res) {
   res.status(404).json({
     message: "요청하신 채널 정보를 찾을 수 없습니다.",
   });
