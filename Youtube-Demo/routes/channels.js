@@ -6,6 +6,17 @@ const { body, param, validationResult } = require("express-validator");
 
 router.use(express.json()); //http 외 모듈 'json' 사용
 
+//유효성 검사
+const validate = (req, res, next) => {
+  const err = validationResult(req);
+
+  if (err.isEmpty()) {
+    return next(); //다음 할 일(미들웨어, 함수) 하러 가라고 명시
+  } else {
+    return res.status(400).json(err.array());
+  }
+};
+
 router
   .route("/")
   .post(
@@ -18,15 +29,10 @@ router
         .notEmpty()
         .isString()
         .withMessage("name은 문자를 입력해 주세요."),
+      validate,
     ],
     (req, res) => {
       // 개별 채널 생성
-      const err = validationResult(req);
-      if (!err.isEmpty()) {
-        // =에러가 존재하면
-        return res.status(400).json(err.array());
-      }
-
       const { name, userId } = req.body;
 
       let sql = `INSERT INTO channels (name, user_id) VALUES (?, ?)`;
@@ -42,16 +48,15 @@ router
     }
   )
   .get(
-    body("userId")
-      .notEmpty()
-      .isInt()
-      .withMessage("userId는 숫자를 입력해 주세요."),
-    (req, res) => {
+    [
+      body("userId")
+        .notEmpty()
+        .isInt()
+        .withMessage("userId는 숫자를 입력해 주세요."),
+      validate,
+    ],
+    (req, res, next) => {
       // 채널 전체 조회
-      const err = validationResult(req);
-      if (!err.isEmpty()) {
-        return res.status(400).json(err.array());
-      }
 
       var { userId } = req.body;
 
@@ -73,14 +78,10 @@ router
     [
       param("id").notEmpty().withMessage("채널id가 필요합니다."),
       body("name").notEmpty().isString().withMessage("채널명 오류"),
+      validate,
     ],
     (req, res) => {
       // 개별 채널 수정
-      const err = validationResult(req);
-      if (!err.isEmpty()) {
-        return res.status(400).json(err.array());
-      }
-
       let { name } = req.body;
       let { id } = req.params;
       id = parseInt(id);
@@ -100,14 +101,12 @@ router
     }
   )
   .delete(
-    param("id").notEmpty().isInt().withMessage("채널id가 필요합니다."),
+    [
+      param("id").notEmpty().isInt().withMessage("채널id가 필요합니다."),
+      validate,
+    ],
     (req, res) => {
       // 개별 채널 삭제
-      const err = validationResult(req);
-      if (!err.isEmpty()) {
-        return res.status(400).json(err.array());
-      }
-
       let { id } = req.params;
       id = parseInt(id);
 
@@ -128,15 +127,9 @@ router
     }
   )
   .get(
-    param("id").notEmpty().withMessage("채널id가 필요합니다."),
+    [param("id").notEmpty().withMessage("채널id가 필요합니다."), validate],
     (req, res) => {
       // 개별 채널 조회
-
-      const err = validationResult(req);
-      if (!err.isEmpty()) {
-        return res.status(400).json(err.array());
-      }
-
       let { id } = req.params;
       id = parseInt(id);
 
