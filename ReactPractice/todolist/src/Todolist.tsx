@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from "react-bootstrap";
 
 type Todo = {
   id: number;
@@ -16,6 +17,8 @@ const TodoList: React.FC = () => {
     { id: 3, text: "잠자기", isChecked: false },
   ]);
 
+  const [newTodo, setNewTodo] = useState<string>("");
+
   const handleCheckedChange = (itemId: number) => {
     setTodos((prevItems) =>
       prevItems.map((item) =>
@@ -24,10 +27,29 @@ const TodoList: React.FC = () => {
     );
   };
 
+  const addTodo = () => {
+    if (newTodo.trim() !== "") {
+      setTodos([...todos, { id: Date.now(), text: newTodo, isChecked: false }]);
+      setNewTodo("");
+    }
+  };
+
   return (
     <div>
       <h1> {title} </h1>
       <div className="container">
+        <div>
+          <input
+            type="text"
+            placeholder="할 일 입력"
+            onChange={(e) => setNewTodo(e.target.value)}
+            style={{ marginRight: "10px" }}
+          />
+          <Button variant={"warning"} onClick={addTodo}>
+            추가
+          </Button>
+        </div>
+        <br />
         <div className="board">
           <ul>
             {todos.map((todo, index) => (
@@ -37,7 +59,7 @@ const TodoList: React.FC = () => {
                   onChange={() => {
                     handleCheckedChange(todo.id);
                   }}
-                ></input>
+                />
                 <span>
                   {todo.isChecked ? (
                     <del>{todo.text}</del>
