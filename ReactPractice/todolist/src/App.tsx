@@ -2,7 +2,7 @@ import React from "react";
 import "./App.css";
 import TodoList from "./Todolist";
 // import MapTest from "./mapTest";
-import Clock from "./Timer";
+// import Clock from "./Timer";
 
 /*
 작성자 : Park Suyeon
@@ -15,7 +15,7 @@ function App() {
     <div className="container">
       <TodoList></TodoList>
       {/* <MapTest></MapTest> */}
-      <Clock></Clock>
+      {/* <Clock></Clock> */}
     </div>
   );
 }
