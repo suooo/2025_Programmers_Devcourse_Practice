@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import DropDownFrom from "./DropDownForm/DropDownFrom";
+import React, { useState, type FC } from "react";
+import DropDownFrom from "./DropDownForm/DropDownForm";
 import { IoIosAdd } from "react-icons/io";
 import { listButton, taskButton } from "./ActionButton.css";
 
@@ -9,7 +9,7 @@ type TActionProps = {
   list?: boolean;
 };
 
-const ActionButton = ({ boardId, listId, list }) => {
+const ActionButton: FC<TActionProps> = ({ boardId, listId, list }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const buttonText = list ? "새로운 리스트 등록" : "새로운 일 등록";
 
